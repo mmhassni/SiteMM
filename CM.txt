@@ -1,0 +1,7 @@
+lien :
+
+https://www.wakdev.com/more/wiki/javascript-actionscript-vbscript/68-tri-drag-and-drop-dans-une-liste-dynamique.html
+
+more explained
+
+https://jqueryui.com/sortable/

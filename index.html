@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>index</title>
+
+
+
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
+
+    <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+
+    <script src="https://unpkg.com/terraformer@1.0.7"></script>
+    <script src="https://unpkg.com/terraformer-geostore@1.0.4/browser/terraformer-geostore.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/terraformer-geostore-memory@1.0.0" type="text/javascript"></script>
+    <script src="https://unpkg.com/terraformer-rtree@1.0.0" type="text/javascript"></script>
+    <script src="https://unpkg.com/terraformer-arcgis-parser@1.0.5"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
+    </script>
+<!--
+    <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
+-->
+    <link rel="stylesheet" href="https://js.arcgis.com/4.8/esri/css/main.css">
+    <script src="https://js.arcgis.com/4.8/"></script>
+
+
+    <link rel="stylesheet" href="css/style.css"/>
+    <script  src="js/script.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('select').material_select();
+        });
+        $('select').on('contentChanged', function() {
+            $(this).material_select();
+        });
+    </script>
+<!--
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $( function() {
+            $( "#sortable" ).sortable({
+                //accept : 'sortable_item',
+                axis: 'vertically',
+                opacity: 0.6,
+                onchange: function (sorted) {
+                    serial = $.SortSerialize('sortlist');
+                }
+            });
+            // $( "#sortable" ).disableSelection();
+        } );
+    </script>
+    -->
+
+    <script src="js/autocomplet.js"></script>
+    <link rel="stylesheet" href="css/autocomplet.css">
+
+    <script src="js/map.js" ></script>
+
+
+</head>
+
+
+<body>
+
+
+<div id="mySidenav" class="sidenav">
+    <!--<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>-->
+    <span style="position:absolute; left:5px; top:5px;font-size:20px;cursor:pointer" onclick="moveNav()"><i class="medium material-icons " style="color: #66c2b5;">compare_arrows</i></span>
+
+    <h3>Menu</h3>
+    <!--
+        <br /><br />
+        <button class="waves-effect waves-light btn" onClick="expandAll();"><i class="material-icons left">fullscreen</i>Expand All</button>
+        <button class="waves-effect waves-light btn" onClick="collapseAll();"><i class="material-icons left">fullscreen_exit</i>Collapse All</button>
+        <br /><br />
+    -->
+    <ul class="collapsible">
+
+        <li>
+            <div class="collapsible-header" ><i class="material-icons">search</i>Request</div> <!-- filter_lis filter_b_and_w -->
+            <div class="collapsible-body container" style="width: 95%;"><span>
+                <br>
+
+                <h5>Request type :</h5>
+                <div id="requestType">
+                        <label>
+                            <input id="sp" name="RequestType" type="radio" value="Spatiale"  />
+                            <label for="sp">Spatiale<label>
+                            </label>
+                        <label>
+                            <input id="attr" name="RequestType" type="radio" value="Attributaire" />
+                            <label for="attr">Attributaire </label>
+                        </label>
+                </div>
+                <br>
+                <div id="Attributaire" style="display: none" class="desc">
+                    
+                    <div id="where">
+
+                        <form action="" method="get" id="attributeRequest">
+
+
+                            <div>
+                                <input onfocus="ShowOptions('requestTables')" id="textareaTables" type="text" placeholder="Selected Tables" class="materialize-textarea" style="padding: 5px;"></input>
+                            </div>
+
+
+                            <div style="display: none;margin-bottom: 10px;" id="requestTables" class="input-field col s12">
+                                <select name="tables" id="tables">
+                                    <option value="" disabled selected>Tables</option>
+                                    <option value="table1" >Table1</option>
+                                    <option value="table2" >Table2</option>
+                                </select>
+                                <button id="T" onclick="addTable()" type="button" class="btn-floating btn-large waves-effect waves-light">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            </div>
+
+                            <div>
+                                <input onfocus="ShowOptions('requestFields')" id="textareaFields" type="text" placeholder="Selectionner les champs" class="materialize-textarea" style="padding: 5px;"></input>
+                            </div>
+
+
+
+                            <div style="display: none;margin-bottom: 10px;" id="requestFields" class="input-field col s12">
+                                <select name="champs" id="champs">
+                                    <option value="" disabled selected>Champs</option>
+                                    <option value="id" >id</option>
+                                    <option value="ShapeArea" >ShapeArea</option>
+                                </select>
+                                <button id="F" onclick="addField()" type="button" class="btn-floating btn-large waves-effect waves-light">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            </div>
+
+                            <div>
+                                <input onfocus="ShowOptions('requestGeomFields')" id="textareaGeometry" type="text" placeholder="Selectionner le champ geometrie" class="materialize-textarea" style="padding: 5px;"></input>
+                            </div>
+
+
+                            <div style="display: none;margin-bottom: 10px;" id="requestGeomFields" class="input-field col s12">
+                                <select name="geometry" id="geometry">
+                                    <option value="" disabled selected>Champs geometry</option>
+                                    <option value="Geom1" >Geom1</option>
+                                    <option value="Geom2" >Geom2</option>
+                                </select>
+                                <button id="G" onclick="addGeometry()" type="button" class="btn-floating btn-large waves-effect waves-light">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            </div>
+                            <br>
+
+                            <h5>Les Filtres</h5> 
+
+                            <div id="conditions">
+                                <div id='divCond1' >
+                                    Condition 1 :
+                                    <input id="condition1" type="text"  class="conditionWhere">
+                                </div>
+                            </div>
+
+                            <div  style="display: flex;justify-content: center;align-items: center;">
+                                <button type="button" class="btn waves-effect waves-light" id="add" >Add Filter</button>
+
+                            
+                                <button type="button" class="btn waves-effect red accent-4" id="remove" >Remove</button>
+                                
+                            </div>
+
+                            
+                            
+                            
+                        </form>
+
+                        <br>
+
+                        <div style="display: flex;justify-content: center;align-items: center;">
+                            <button onclick="GenerateSQL()" class="btn waves-effect waves-light" >Submit 
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div>
+                        
+
+
+
+                    </div>
+                </div>
+                <div id="Spatiale" style="display: none" class="desc">
+                    <br>
+                    <form action="" method="get" id="spatialeRequest">
+                        <div class="input-field col s12">
+                            <select name="tablesSource" id="tablesSeletSource">
+                                <option value="" disabled selected>Select Source Layer</option>"
+                            </select>
+                        </div>
+                        <div class="input-field col s12">
+                            <select name="tablesCible" id="tablesSeletCible">
+                                <option value="" disabled selected>Select Cible Layer</option>"
+                            </select>
+                        </div>
+
+                    </form>
+                    <button class="btn waves-effect waves-light" type="submit" name="action" value="Submit" form="spatialeRequest">Submit
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+                <br>
+
+            </span></div>
+        </li>
+        <li>
+            <div class="collapsible-header"><i class="material-icons">layers</i>Layers</div>
+            <div class="collapsible-body container" style="width: 95%;"><span>
+                <br>
+
+                <ul id="sortable" class="collection with-header">
+                    <li id="lyr0" class="collection-header"><h5>Layers</h5></li>
+                    <li id="lyr1" class="collection-item">
+                        <div>Region
+                            <i style="cursor:pointer" class="material-icons secondary-content">map</i>
+
+
+
+                            <i style="cursor:pointer" onclick="$(this).hide();$(this).next().show()" class="material-icons secondary-content">visibility</i>
+                            <i class="material-icons secondary-content">invert_colors</i>
+                            <i style="cursor:pointer ;color: #a2a2a2 ;display: none;" onclick="$(this).hide();$(this).prev().show()" class="material-icons secondary-content">visibility_off</i>
+                            <i style="cursor:pointer" onclick="console.log($(this));$(this).parent().parent().remove();" class="material-icons secondary-content">delete</i>
+                            <div class="icon secondary-content" style="position:relative; display:inline-block">
+                                <i class="btnColor material-icons secondary-content">color_lens</i>
+                                <input onchange="btnClr()" type="color" value="#ff0000" style="opacity : 0 ; position:absolute; left:0;top:0;width:100%"/>
+                            </div>
+                            <p class="range-field">
+                                <input type="range" id="test5" min="0" max="100" /> <i class="material-icons secondary-content" style="position: in">invert_colors</i>
+                            </p>
+                        </div>
+
+                    </li>
+                    <li id="lyr2" class="collection-item">
+                        <div>Provinces2
+                            <i style="cursor:pointer" class="material-icons secondary-content">map</i>
+
+                            <i style="cursor:pointer" onclick="$(this).hide();$(this).next().show()" class="material-icons secondary-content">visibility</i>
+                            <i style="cursor:pointer ;color: #a2a2a2 ;display: none;" onclick="$(this).hide();$(this).prev().show()" class="material-icons secondary-content">visibility_off</i>
+
+                            <i style="cursor:pointer" onclick="$(this).parent().parent().remove()" class="material-icons secondary-content">delete</i>
+
+                            <div class="icon secondary-content" style="position:relative; display:inline-block">
+                                <i class="btnColor material-icons secondary-content">color_lens</i>
+                                <input onchange="btnClr()" type="color" value="#ff0000" style="opacity : 0 ; position:absolute; left:0;top:0;width:100%"/>
+                            </div>
+                            <p class="range-field">
+                                <input type="range" id="test5" min="0" max="100" /> <i class="material-icons secondary-content" style="position: in">invert_colors</i>
+                            </p>
+
+                        </div>
+                    </li>
+                    <li id="lyr3" class="collection-item">
+                        <div>Titres
+                            <i style="cursor:pointer" class="material-icons secondary-content">map</i>
+                            <i style="cursor:pointer" onclick="$(this).hide();$(this).next().show()" class="material-icons secondary-content">visibility</i>
+                            <i style="cursor:pointer ;color: #a2a2a2 ;display: none;" onclick="$(this).hide();$(this).prev().show()" class="material-icons secondary-content">visibility_off</i>
+
+                            <i style="cursor:pointer" onclick="$(this).parent().parent().remove()" class="material-icons secondary-content">delete</i>
+                            <div class="icon secondary-content" style="position:relative; display:inline-block">
+                                <i class="btnColor material-icons secondary-content">color_lens</i>
+                                <input onchange="btnClr()" type="color" value="#ff0000" style="opacity : 0 ; position:absolute; left:0;top:0;width:100%"/>
+                            </div>
+                            <p class="range-field">
+                                <input type="range" id="test5" min="0" max="100" /> <i class="material-icons secondary-content" style="position: in">invert_colors</i>
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            <br>
+            </span></div>
+        </li>
+
+        <li>
+            <div class="collapsible-header"><i class="material-icons">print</i>Print</div>
+            <div class="collapsible-body container" style="width: 95%;"><span>
+                <br>
+                Configuration:
+                <br>
+                <!--
+                <div class="input-field">
+                            <div class="select-wrapper"><span class="caret">▼
+                            </span>
+                                <input type="text" class="select-dropdown" readonly="true" data-activates="select-options-31f2aa8f-d023-6795-1708-0b447518adc8" value="Selectioner Format">
+                                <ul id="select-options-31f2aa8f-d023-6795-1708-0b447518adc8" class="dropdown-content select-dropdown" style="width: 215.76px; position: absolute; top: 0px; left: 0px; opacity: 1; display: none;">
+                                    <li class="disabled">
+                                        <span>Selectioner Format</span>
+                                    </li>
+                                    <li class="">
+                                        <span>PDF</span>
+                                    </li>
+                                    <li class="">
+                                        <span>JPEG</span>
+                                    </li>
+                                </ul><select id="exportFormat" name="exportFormat" class="initialized">
+                                <option value="Selectioner Format" disabled="" selected="selected">Selectioner Format</option>
+                                <option value="PDF">PDF</option>
+                                <option value="JPEG">JPEG</option>
+                            <option value="mohamed"></option><option value="mhassn"></option><option value="tab"></option></select></div>
+                </div>
+                -->
+
+                <div >
+                            <select  id="exportFormat" name="exportFormat" >
+                                <option value="Selectioner Format" disabled selected="selected">Selectioner Format</option>
+                                <option value="PDF" >PDF</option>
+                                <option value="JPEG">JPEG</option>
+                            </select>
+                </div>  
+                <br>
+                <button class="btn waves-effect waves-light" type="submit" name="action" value="Submit" form="spatialeRequest">Lancer impression
+                        <i class="material-icons right">send</i>
+                </button>   
+                <br>
+                <br>
+
+            </span></div>
+        </li>
+        <li>
+            <div class="collapsible-header" id="conf"><i class="material-icons">storage</i>Configuration</div>
+            <div class="collapsible-body container" style="width: 95%;">
+                <span>
+                <div id="iconsConfig" style="opacity: 0">vpn_lock/tune/assignment.</div>
+                
+
+                <form style="size :A5" >
+                    <div id="config">
+
+                    </div>
+
+                    URL :
+                    <input type="text" id="url" name="url" style="padding: 5px;" required="" placeholder="url">
+                    Driver :
+                    <input type="text" id="driver" name="driver" style="padding: 5px;" required="" placeholder="driver">
+                    User :
+                    <input type="text" id="user" name="user" style="padding: 5px;" required="" placeholder="nom d'utilisateur">
+                    Password :
+                    <input type="text" id="pass" name="pass" style="padding: 5px;" required="" placeholder="mot de passe">
+
+                </form>
+                    <button onclick="GenerateConfig()" class="btn waves-effect waves-light">
+                        <i class="material-icons right">send</i>Envoyer
+                    </button>
+
+
+                </span>
+            </div>
+        </li>
+    </ul>
+
+    <!--
+        <h4>Databases :</h4>
+        <div id="DBList" class="input-field col s12">
+            <select name="DB" id="DBSelect">
+                <option value="" disabled selected>Select your DataBase</option>
+                <option value="DB_1">DB 1</option>
+                <option value="DB_2">DB 2</option>
+
+             <!--   <%@ page import="java.util.*" %>>
+                <%
+                ArrayList<String> DBs = (ArrayList<String>) request.getAttribute("DBs");
+
+                for(int i = 0;i<DBs.size();i++){
+                out.println("<option value="+DBs.get(i)+">"+DBs.get(i)+"</option>");
+                }
+                %>  hna kain comment
+
+            </select>
+        </div>
+
+        <br>
+        <h4>Request type :</h4>
+        <div id="requestType">
+            <p>
+                <label>
+                    <input id="choice_1" name="RequestType" type="radio" value="Spatiale" checked />
+                    <label for="choice_1">Spatiale<label>
+                    </label>
+            </p>
+            <p>
+                <label>
+                    <input id="choice_2" name="RequestType" type="radio" value="Attributaire" />
+                    <label for="choice_2">Attributaire </label>
+                </label>
+            </p>
+        </div>
+
+        <br><br>
+        <div id="where">
+            <h4>Make ur conditions</h4> <br> <br>
+            <div id="conditions">
+                <div id=divCond1'>
+                    <h6>Condition 1 : </h6>
+                    <input id="condition1" type="text" name='+value+'[]>
+                </div>
+            </div>
+            <button type="button" class="btn waves-effect waves-light" id="add" >Add More</button>
+            <button type="button" class="btn waves-effect red accent-4" id="remove" >Remove</button>
+        </div>
+    -->
+
+
+</div>
+
+
+<!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+<div id="main"  style="height: 100% ;padding: 0px;">
+
+
+
+    <div id="divMap" style="height: 100%; border: 2px solid #0D47A1 ">
+        
+
+            
+            <span id="info" style="position:absolute; left:15px; bottom:5px; color:#fff; z-index:50;"></span>
+    </div>
+
+
+
+</div>
+
+ <span style="position:absolute; left:5px; top:5px;font-size:20px;cursor:pointer" onclick="moveNav()"><i class="medium material-icons " style="color: #66c2b5;">compare_arrows</i></span>
+
+
+</body>
+</html>
