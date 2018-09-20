@@ -1,14 +1,23 @@
+var divMain, divMap, divMapPrint, divMapPreview ;
+divMap = document.getElementById("divMap");
+divMapPrint = document.getElementById("divMapPrint");
+divMapPreview = document.getElementById("mapPreview");
+divMain = document.getElementById("main");
+
+var mydiv3 = document.getElementById("mydiv3");
+
+
 var PrintScreen = function () {
     moveNav();
 
-    var divMap, divMapPrint, divMapPreview ;
-    divMap = document.getElementById("divMap");
-    divMapPrint = document.getElementById("divMapPrint");
-    divMapPreview = document.getElementById("mapPreview");
+    divMain.removeChild(divMap);
 
-    divMapPreview.innerHTML = divMap.innerHTML;
-    //divMapPreview = divMap;
 
-    divMap.style.display = "none";
+    mydiv3.appendChild(divMap) ;
+
+    //$(document).remove("#divMap");
+
+
+    //divMap.style.display = "none";
     divMapPrint.style.display = "block";
 }

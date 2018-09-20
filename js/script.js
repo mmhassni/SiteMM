@@ -5,7 +5,6 @@
 //Make the DIV element draggagle:
 
 
-// dragElement(document.getElementById("legend"));
 
 function dragElement(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -47,6 +46,7 @@ function dragElement(elmnt) {
         document.onmousemove = null;
     }
 }
+
 
 
 function updateSelectList1(id, list){
@@ -377,3 +377,12 @@ $(document).ready (
         });
 
     });*/
+
+
+$(document).ready (
+    function() {
+        dragElement(document.getElementById("mydiv"));
+        dragElement(document.getElementById("mydiv1"));
+        dragElement(document.getElementById("mydiv2"));
+        dragElement(document.getElementById("mydiv3"));
+    })

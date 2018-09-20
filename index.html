@@ -60,8 +60,7 @@
     <script src="js/autocomplet.js"></script>
     <link rel="stylesheet" href="css/autocomplet.css">
 
-    <script src="js/map.js" ></script>
-    <script src="js/Print.js"></script>
+
 
 
 </head>
@@ -432,15 +431,37 @@
             <span id="info" style="position:absolute; left:15px; bottom:5px; color:#fff; z-index:50;"></span>
     </div>
 
-    <div id="divMapPrint">
+    <div id="divMapPrint" style="display: none">
         <h1>Impression</h1>
         <button class="btn waves-effect waves-light" >Print
             <i class="material-icons right">print</i>
         </button>
 
         <div id="mapTitle"  style="border: #0D47A1"></div>
-        <div id="mapPreview" style="height: 100%; border: 2px solid #0D47A1 " ></div>
+
         <div id="legend" style="border: #5d4037" ></div>
+
+        <div id="mydiv">
+            <div id="mydivheader">Legende</div>
+            <p>Move</p>
+            <p>this</p>
+            <p>DIV</p>
+        </div>
+
+        <div id="mydiv1">
+            <div id="mydiv1header">Title</div>
+        </div>
+
+        <div id="mydiv2">
+            <div id="mydiv2header">Paragraphe</div>
+            <p>blalalal</p>
+        </div>
+
+        <div id="mydiv3">
+            <div id="mydiv3header">Map</div>
+            <div id="mapPreview" style="height: 100%; border: 2px solid #0D47A1 " ></div>
+        </div>
+
     </div>
 
 
@@ -448,6 +469,10 @@
 
  <span style="position:absolute; left:5px; top:5px;font-size:20px;cursor:pointer" onclick="moveNav()"><i class="medium material-icons " style="color: #66c2b5;">compare_arrows</i></span>
 
+
+
+<script src="js/map.js" ></script>
+<script src="js/Print.js"></script>
 
 </body>
 </html>
