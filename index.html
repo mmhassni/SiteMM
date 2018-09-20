@@ -61,6 +61,7 @@
     <link rel="stylesheet" href="css/autocomplet.css">
 
     <script src="js/map.js" ></script>
+    <script src="js/Print.js"></script>
 
 
 </head>
@@ -308,6 +309,13 @@
                             <option value="mohamed"></option><option value="mhassn"></option><option value="tab"></option></select></div>
                 </div>
                 -->
+                <br>
+                Title :
+                <input type="text" id="mapPrintTitle" name="mapPrintTitle" style="padding: 5px;" required="" placeholder="Title">
+                Name :
+                <input type="text" id="name" name="name" style="padding: 5px;" required="" placeholder="Name">
+                Paragraphe :
+                <textarea class="materialize-textarea" style="padding: 5px;" placeholder="Paragraphe" ></textarea>
 
                 <div >
                             <select  id="exportFormat" name="exportFormat" >
@@ -317,7 +325,7 @@
                             </select>
                 </div>  
                 <br>
-                <button onclick="PrintScreen()" class="btn waves-effect waves-light" type="submit" name="action">Lancer impression
+                <button onclick="PrintScreen()" class="btn waves-effect waves-light" type="submit" name="action">Mode impression
                         <i class="material-icons right">send</i>
                 </button>   
                 <br>
@@ -426,9 +434,13 @@
 
     <div id="divMapPrint">
         <h1>Impression</h1>
-        <div id="mapTitle"></div>
-        <div id="mapPreview"></div>
-        <div id="legend"></div>
+        <button class="btn waves-effect waves-light" >Print
+            <i class="material-icons right">print</i>
+        </button>
+
+        <div id="mapTitle"  style="border: #0D47A1"></div>
+        <div id="mapPreview" style="height: 100%; border: 2px solid #0D47A1 " ></div>
+        <div id="legend" style="border: #5d4037" ></div>
     </div>
 
 

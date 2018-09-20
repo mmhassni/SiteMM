@@ -1,17 +1,3 @@
-function PrintScreen() {
-    moveNav();
-
-    var divMap, divMapPrint, divMapPreview ;
-    divMap = document.getElementById("divMap");
-    divMapPrint = document.getElementById("divMapPrint");
-    divMapPreview = document.getElementById("mapPreview");
-
-    divMapPreview.innerHTML = divMap.innerHTML;
-
-
-    divMap.style.display = "none";
-    divMapPrint.style.display = "block";
-}
 
 
 
@@ -289,7 +275,7 @@ function closeNav() {
 }
 
 
-function moveNav() {
+var moveNav =  function () {
     var isOpen = (document.getElementById("mySidenav").style.width !== "0px");
     if(isOpen) closeNav();
     else openNav();
