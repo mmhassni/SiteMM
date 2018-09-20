@@ -228,7 +228,6 @@
 
 
                             <i style="cursor:pointer" onclick="$(this).hide();$(this).next().show()" class="material-icons secondary-content">visibility</i>
-                            <i class="material-icons secondary-content">invert_colors</i>
                             <i style="cursor:pointer ;color: #a2a2a2 ;display: none;" onclick="$(this).hide();$(this).prev().show()" class="material-icons secondary-content">visibility_off</i>
                             <i style="cursor:pointer" onclick="console.log($(this));$(this).parent().parent().remove();" class="material-icons secondary-content">delete</i>
                             <div class="icon secondary-content" style="position:relative; display:inline-block">
@@ -318,7 +317,7 @@
                             </select>
                 </div>  
                 <br>
-                <button class="btn waves-effect waves-light" type="submit" name="action" value="Submit" form="spatialeRequest">Lancer impression
+                <button onclick="PrintScreen()" class="btn waves-effect waves-light" type="submit" name="action">Lancer impression
                         <i class="material-icons right">send</i>
                 </button>   
                 <br>
@@ -425,6 +424,12 @@
             <span id="info" style="position:absolute; left:15px; bottom:5px; color:#fff; z-index:50;"></span>
     </div>
 
+    <div id="divMapPrint">
+        <h1>Impression</h1>
+        <div id="mapTitle"></div>
+        <div id="mapPreview"></div>
+        <div id="legend"></div>
+    </div>
 
 
 </div>
