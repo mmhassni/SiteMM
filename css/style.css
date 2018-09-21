@@ -4,6 +4,11 @@
     background-color: #f1f1f1;
     text-align: center;
     border: 1px solid #d3d3d3;
+
+
+    resize: both;
+    overflow: auto;
+
 }
 
 #mydivheader, #mydiv1header, #mydiv2header, #mydiv3header {

@@ -432,14 +432,14 @@
     </div>
 
     <div id="divMapPrint" style="display: none">
-        <h1>Impression</h1>
-        <button class="btn waves-effect waves-light" >Print
+        <h1 id="impression" style="text-align: center">Impression</h1>
+        <pre id="help">Deplacer les elements de la carte (légende, texts, map) comme vous voulez, vous pouvez aussi leurs changer la taille.
+--Ce text ne figurera pas dans l'impression --
+        </pre>
+        <button id="printButton" onclick="print()" class="btn waves-effect waves-light" >Print
             <i class="material-icons right">print</i>
         </button>
 
-        <div id="mapTitle"  style="border: #0D47A1"></div>
-
-        <div id="legend" style="border: #5d4037" ></div>
 
         <div id="mydiv">
             <div id="mydivheader">Legende</div>

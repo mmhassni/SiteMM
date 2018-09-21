@@ -21,3 +21,10 @@ var PrintScreen = function () {
     //divMap.style.display = "none";
     divMapPrint.style.display = "block";
 }
+
+var print = function(){
+    document.getElementById("printButton").style.display = "none";
+    document.getElementById("impression").style.display = "none";
+    document.getElementById("help").style.display = "none";
+    javascript:window.print() ;
+}
