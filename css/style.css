@@ -12,6 +12,7 @@
 }
 
 #mydivheader, #mydiv1header, #mydiv2header, #mydiv3header {
+    display : none;
     padding: 10px;
     cursor: move;
     z-index: 10;

@@ -4,6 +4,7 @@ divMapPrint = document.getElementById("divMapPrint");
 divMapPreview = document.getElementById("mapPreview");
 divMain = document.getElementById("main");
 
+
 var mydiv3 = document.getElementById("mydiv3");
 
 
