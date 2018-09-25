@@ -35,11 +35,11 @@ var PrintScreen = function () {
     divMapPrint.style.display = "block";
 }
 
-var print = function(){
+var printMap = function(){
     document.getElementById("printButton").style.display = "none";
     document.getElementById("impression").style.display = "none";
     document.getElementById("help").style.display = "none";
-    javascript:window.print() ;
+    window.print() ;
 }
 /*
 interact('.resize-drag')
