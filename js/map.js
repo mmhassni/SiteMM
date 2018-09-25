@@ -1,11 +1,12 @@
-/*globals counties*/
+/*globals variable*/
 
 var FeatureLayersTable = [];
 var mapMain;
 var view;
 var legend;
 var ListLayerUI = [];
-var fctChangerSymbologie; //une fonction
+var fctChangerSymbologieCouleur; //une fonction
+var fctChangerSymbologieOpacite; //une fonction
 var fctRequestToFeatureLayer;
 
 
@@ -83,10 +84,10 @@ require([
                     view: view
                 });
 
-        var sss = "http://localhost:9090/requestAny/select%20gid,nature,num,indice,complement,geomjson%20from%20titres%20limit%20400";
+        var sss = "select%20gid,nature,num,indice,complement,geomjson%20from%20titres%20limit%20400";
 
 
-        fctRequestToFeatureLayer = function RequestToFeatureLayer(laRequete,titre)
+        fctRequestToFeatureLayer = function RequestToFeatureLayer(laRequete,titre,idTable,geomField,wkid,fieldSymbologie)
         {
 
         var featuresFinal = [];
@@ -97,11 +98,11 @@ require([
 
         var fieldsTable = [];
 
-
-        var layerB;
+        var layerType;
+        var layerTemp;
         var counties;
         var graphiqueLayer = new GraphicsLayer(); //ce n'est qu'un moyen pour obtenir une collection de graphics
-        req.open("GET", laRequete , true);
+        req.open("GET","http://localhost:9090/geometricRequest/" + laRequete + "&" +idTable + "&" + geomField + "&" + wkid , true);
         req.addEventListener("load", function () {
             console.log("ee");
 
@@ -142,7 +143,16 @@ require([
                         // convert to an esri geometry
                         var geometry = geometryJsonUtils.fromJSON(geom);
 
-                        geometry.spatialReference = new SpatialReference({wkid:3857});
+
+                        //si le wkid est 0 alors on le prend par default
+                        if(wkid === 0)
+                        {
+                            geometry.spatialReference = new SpatialReference({wkid:3857});
+                        }
+                        else
+                        {
+                            geometry.spatialReference = new SpatialReference({wkid:wkid});
+                        }
 
                         // make a new graphic for the map
                         var gfx = new Graphic(geometry,symobologie);
@@ -159,7 +169,7 @@ require([
 
 
                         for (var j = 0; j <= fieldsTable.length - 1; j++) {
-                            if(fieldsTable[j].name != "gid")
+                            if(fieldsTable[j].name != idTable)
                             {
                                 att[fieldsTable[j].name]=county[fieldsTable[j].name];
                             }
@@ -173,8 +183,8 @@ require([
 
                         delete geom.spatialReference;
 
-
-                        geom["type"]="polygon";
+                        layerType=toEsriGeometryType(county.geometry.type);
+                        geom["type"]= layerType;
 
 
 
@@ -193,12 +203,12 @@ require([
 
 
 
-                layerB = new FeatureLayer({
+                layerTemp = new FeatureLayer({
                     fields: fieldsTable ,
 
-                    objectIdField: "gid",  // field name of the Object IDs
+                    objectIdField: idTable,  // field name of the Object IDs
 
-                    geometryType : "polygon",
+                    geometryType : layerType,
 
                     source: graphiqueLayer.graphics,
 
@@ -210,19 +220,19 @@ require([
 
                 });
 
-                layerB.renderer = {
+                layerTemp.renderer = {
                     type: "unique-value",  // autocasts as new UniqueValueRenderer()
-                    field: "gid",
+                    field: fieldSymbologie,
                     defaultSymbol: { type: "simple-fill" , color: new Color([155,255,100,0.35])}
                   };
 
 
                 //on l'ajoute à la liste des couches
-                ListLayerUI.push(layerB);
+                ListLayerUI.push(layerTemp);
 
-                mapMain.add(layerB);
+                mapMain.add(layerTemp);
 
-                legend.layerInfos.push({layer:layerB,title:titre});
+                legend.layerInfos.push({layer:layerTemp,title:titre});
 
                 
 
@@ -231,7 +241,7 @@ require([
                 view.ui.add(legend, "bottom-left");
 
 
-                console.log(layerB);
+                console.log(layerTemp);
 
             }//fin du grand if
             else {
@@ -252,12 +262,12 @@ require([
 
         req.send(null);
 
-        return layerB;
+        return layerTemp;
             
 
         } //fin fonction 
 
-        fctRequestToFeatureLayer(sss,"titre foncier");
+        fctRequestToFeatureLayer(sss,"titre foncier","gid","geomjson",0,"nature");
 
 
 
@@ -288,15 +298,47 @@ require([
 
     
 
+    fctChangerSymbologieOpacite = function changerSymbologieOpacite(a)
+    {
+        view.ui.remove(legend);
+        ListLayerUI[indexCouche].renderer.defaultSymbol.color.a=a;
 
-  
-    fctChangerSymbologie = function changerSymbologie(indexCouche,r,g,b,a)
+        ListLayerUI[indexCouche].source._items.forEach(
+            function(e)
+            {
+
+                e.symbol.color.a=a;
+
+            });
+
+        legend.layerInfos[indexCouche].layer = ListLayerUI[indexCouche];
+        ListLayerUI[indexCouche].refresh();
+
+        legend = new Legend({
+            view: view,
+
+            layerInfos: [
+                {
+                    layer: ListLayerUI[indexCouche],
+                    title: "Titres Fonciers"
+                }
+
+            ]
+
+        });
+
+
+
+        view.ui.add(legend, "bottom-left");
+
+    }
+
+    fctChangerSymbologieCouleur = function changerSymbologieCouleur(indexCouche,r,g,b)
     {
           view.ui.remove(legend);
           ListLayerUI[indexCouche].renderer.defaultSymbol.color.r=r;
           ListLayerUI[indexCouche].renderer.defaultSymbol.color.g=g;
           ListLayerUI[indexCouche].renderer.defaultSymbol.color.b=b;
-          ListLayerUI[indexCouche].renderer.defaultSymbol.color.a=a;
 
           ListLayerUI[indexCouche].source._items.forEach(
             function(e) 
@@ -304,8 +346,7 @@ require([
               e.symbol.color.b=b;
               e.symbol.color.g=g;
               e.symbol.color.r=r;
-              e.symbol.color.a=a;
-              
+
           });
 
             legend.layerInfos[indexCouche].layer = ListLayerUI[indexCouche];
@@ -338,7 +379,7 @@ require([
     {
         
 
-        return layerB;
+        return layerTemp;
 
     }
 
@@ -371,5 +412,53 @@ require([
 
 });
 
+
+function toEsriGeometryType(typeOfOrigine)
+{
+    var esriType;
+    if(typeOfOrigine.toLowerCase().includes("polygon"))
+    {
+        esriType = "polygon";
+    }
+    if(typeOfOrigine.toLowerCase().includes("point"))
+    {
+        esriType = "point";
+    }
+    if(typeOfOrigine.toLowerCase().includes("polyline"))
+    {
+    esriType = "polyline";
+    }
+    if(typeOfOrigine.toLowerCase().includes("mulitpoint"))
+    {
+        esriType = "mulitpoint";
+    }
+    return esriType;
+}
+
+
+$(document).ready (
+
+    Array.from(document.getElementsByClassName("ReglageCouleur")).forEach(function(element)
+    {
+
+
+        element.addEventListener('click',function (e)
+        {
+            print(e);
+
+            fctChangerSymbologieCouleur(
+                Number(this.parentNode.parentNode.parentNode.parentNode.id.split("lyr")[1]),
+                Number(this.parentNode.parentNode.children[0].style.color.substring(4, this.parentNode.parentNode.children[0].style.color.length - 1).split(",")[0]),
+                Number(this.parentNode.parentNode.children[0].style.color.substring(4, this.parentNode.parentNode.children[0].style.color.length - 1).split(",")[1]),
+                Number(this.parentNode.parentNode.children[0].style.color.substring(4, this.parentNode.parentNode.children[0].style.color.length - 1).split(",")[2])
+            );
+
+        });
+
+    })
+
+
+
+)
 
 

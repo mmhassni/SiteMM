@@ -386,3 +386,11 @@ $(document).ready (
         dragElement(document.getElementById("mydiv2"));
         dragElement(document.getElementById("mydiv3"));
     })
+
+
+
+
+
+
+
+

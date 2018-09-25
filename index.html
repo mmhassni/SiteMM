@@ -232,7 +232,7 @@
                             <i style="cursor:pointer" onclick="console.log($(this));$(this).parent().parent().remove();" class="material-icons secondary-content">delete</i>
                             <div class="icon secondary-content" style="position:relative; display:inline-block">
                                 <i class="btnColor material-icons secondary-content">color_lens</i>
-                                <input onchange="btnClr()" type="color" value="#ff0000" style="opacity : 0 ; position:absolute; left:0;top:0;width:100%"/>
+                                <input class="ReglageCouleur" onclick="fctChangerSymbologieCouleur(Number(this.parentNode.parentNode.parentNode.parentNode.id.split("lyr")[1]),Number(this.parentNode.parentNode.children[0].style.color.substring(4, this.parentNode.parentNode.children[0].style.color.length - 1).split(",")[0]),Number(this.parentNode.parentNode.children[0].style.color.substring(4, this.parentNode.parentNode.children[0].style.color.length - 1).split(",")[1]),Number(this.parentNode.parentNode.children[0].style.color.substring(4, this.parentNode.parentNode.children[0].style.color.length - 1).split(",")[2]))" type="color" value="#ff0000" style="opacity : 0 ; position:absolute; left:0;top:0;width:100%"/>
                             </div>
                             <p class="range-field">
                                 <input type="range" id="test5" min="0" max="100" /> <i class="material-icons secondary-content" style="position: in">invert_colors</i>
@@ -436,7 +436,7 @@
         <pre id="help">Deplacer les elements de la carte (légende, texts, map) comme vous voulez, vous pouvez aussi leurs changer la taille.
 --Ce text ne figurera pas dans l'impression --
         </pre>
-        <button id="printButton" onclick="print()" class="btn waves-effect waves-light" >Print
+        <button id="printButton" onclick="printMap()" class="btn waves-effect waves-light" >Print
             <i class="material-icons right">print</i>
         </button>
     <div id="mydiv" onmouseover="showHeader(this)" onmouseleave="hideHeader(this)">
